@@ -7,50 +7,64 @@
     void ret_print(char *token_type);
     void yyerror();
 %}
-%x ML_COMMENT
+%x ML_COMMENT 
+
 alpha       [a-zA-Z]
-digit       [0-9]
-alnum       {alpha}|{digit}
+number       [0-9]
+alnum       {alpha}|{number}
 print       [ -~]
 ID          {alpha}+{alnum}*
-ICONST      "0"|[0-9]{digit}*
-FCONST      "0"|{digit}*"."{digit}+
+ICONST      {number}+
+FCONST      {number}+"."{number}+
 CCONST      (\'{print}\')|(\'\\[nftrbv]\')
 STRING      \"{print}*\"
+TYPE        "char"|"integer"|"string"|"float"
 %%
  
-"//".*                  { printf("Eat up comment at line %d\n", lineno); } 
+"!!".*                  { printf("Eat up comment at line %d\n", lineno); } 
  
-"/*"                    { printf("Eat up comment from line %d ", lineno); BEGIN(ML_COMMENT); }
-<ML_COMMENT>"*/"        { printf("to line %d\n", lineno); BEGIN(INITIAL); }
+"!*"                    { printf("Eat up comment from line %d ", lineno); BEGIN(ML_COMMENT); }
+<ML_COMMENT>"*!"        { printf("to line %d\n", lineno); BEGIN(INITIAL); }
 <ML_COMMENT>[^*\n]+     
 <ML_COMMENT>"*"         
 <ML_COMMENT>"\n"        { lineno += 1; }
  
  
-"char"|"CHAR"           { ret_print("KEYWORD_CHAR"); }
-"int"|"INT"             { ret_print("KEYWORD_INT"); }
-"float"|"FLOAT"         { ret_print("KEYWORD_FLOAT"); }
-"double"|"DOUBLE"       { ret_print("KEYWORD_DOUBLE"); }
-"if"|"IF"               { ret_print("KEYWORD_IF"); }
-"else"|"ELSE"           { ret_print("KEYWORD_ELSE"); }
-"while"|"WHILE"         { ret_print("KEYWORD_WHILE"); }
-"for"|"FOR"             { ret_print("KEYWORD_FOR"); }
-"continue"|"CONTINUE"   { ret_print("KEYWORD_CONTINUE"); }
-"break"|"BREAK"         { ret_print("KEYWORD_BREAK"); }
-"void"|"VOID"           { ret_print("KEYWORD_VOID"); }
-"return"|"RETURN"       { ret_print("KEYWORD_RETURN"); }
+"char"        { ret_print("KEYWORD_CHAR"); }
+"intger"      { ret_print("KEYWORD_INT"); }
+"float"       { ret_print("KEYWORD_FLOAT"); }
+"void"        { ret_print("KEYWORD_VOID"); }
+"string"      { ret_print("KEYWORD_STRING"); }
+"struct"      { ret_print("KEYWORD_STRUCT"); }
+
+
+
+"if"           { ret_print("KEYWORD_IF"); }
+"else"         { ret_print("KEYWORD_ELSE"); }
+"while"        { ret_print("KEYWORD_WHILE"); }
+"break"        { ret_print("KEYWORD_BREAK"); }
+"return"       { ret_print("KEYWORD_RETURN"); }
+"="            { ret_print("ASSIGN"); }
  
  
-"+"|"-"                 { ret_print("ADDOP"); }
+"+"                     { ret_print("SUBOP"); }
+"-"                     { ret_print("ADDOP"); }
 "*"                     { ret_print("MULOP"); }
 "/"                     { ret_print("DIVOP"); }
-"++"|"--"               { ret_print("INCR"); }
+"%"                     { ret_print("MODOP"); }
+
+
 "||"                    { ret_print("OROP"); }
 "&&"                    { ret_print("ANDOP"); }
 "!"                     { ret_print("NOTOP"); }
-"=="|"!="               { ret_print("EQUOP"); }
-">"|"<"|">="|"<="       { ret_print("RELOP"); }
+
+
+"=="                    { ret_print("EQUOP"); }
+"#"                     { ret_print("NEQUOP"); }
+">"                     { ret_print("SUPSOP"); }
+"<"                     { ret_print("INFSOP"); }
+">="                    { ret_print("SUPOP"); }
+"<="                    { ret_print("INFOP"); }
  
  
 "("             { ret_print("LPAREN"); }
@@ -62,16 +76,16 @@ STRING      \"{print}*\"
 ";"             { ret_print("SEMI"); }
 "."             { ret_print("DOT"); }
 ","             { ret_print("COMMA"); }
-"="             { ret_print("ASSIGN"); }
-"&"             { ret_print("REFER"); }
- 
- 
+
+
+
+
 {ID}            { ret_print("ID"); }
 {ICONST}        { ret_print("ICONST"); }
 {FCONST}        { ret_print("FCONST"); }
 {CCONST}        { ret_print("CCONST"); }
 {STRING}        { ret_print("STRING"); }
- 
+{TYPE}"[]"      { ret_print("KEYWORD_TABLE");  }
  
 "\n"            { lineno += 1; }
 [ \t\r\f]+          /* eat up whitespace */
