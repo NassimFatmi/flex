@@ -3,9 +3,16 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #include "tablesymboles.c"
+
     int lineno = 1; // initialize to 1
     void ret_print(char *token_type);
     void yyerror();
+
+	FILE *yyin;
+	FILE *yyout;
+    
+
 %}
 %x ML_COMMENT 
 
@@ -13,12 +20,12 @@ alpha       [a-zA-Z]
 number       [0-9]
 alnum       {alpha}|{number}
 print       [ -~]
-ID          {alpha}+{alnum}*
 ICONST      {number}+
 FCONST      {number}+"."{number}+
 CCONST      (\'{print}\')|(\'\\[nftrbv]\')
 STRING      \"{print}*\"
 TYPE        "char"|"integer"|"string"|"float"
+ID          {alpha}+{alnum}*
 %%
  
 "!!".*                  { printf("Eat up comment at line %d\n", lineno); } 
@@ -36,6 +43,7 @@ TYPE        "char"|"integer"|"string"|"float"
 "void"        { ret_print("KEYWORD_VOID"); }
 "string"      { ret_print("KEYWORD_STRING"); }
 "struct"      { ret_print("KEYWORD_STRUCT"); }
+{TYPE}"[]"    { ret_print("KEYWORD_TABLE");}
 
 
 
@@ -78,18 +86,15 @@ TYPE        "char"|"integer"|"string"|"float"
 ","             { ret_print("COMMA"); }
 
 
+{ICONST}        { ret_print("ICONST"); insert(yytext, strlen(yytext), INT_TYPE, lineno); yyout = fopen("table_symboles.txt", "a");affiche_table(yyout);}
+{FCONST}        { ret_print("FCONST"); insert(yytext, strlen(yytext), FLOAT_TYPE, lineno); yyout = fopen("table_symboles.txt", "a");affiche_table(yyout);}
+{CCONST}        { ret_print("CCONST");insert(yytext, strlen(yytext), CHAR_TYPE, lineno); yyout = fopen("table_symboles.txt", "a");affiche_table(yyout);}
+{STRING}        { ret_print("STRING"); insert(yytext, strlen(yytext), STR_TYPE, lineno); yyout = fopen("table_symboles.txt", "a");affiche_table(yyout);}
+{ID}            { ret_print("ID"); insert(yytext, strlen(yytext), UNDEF, lineno); yyout = fopen("table_symboles.txt", "a");affiche_table(yyout);}
 
-
-{ID}            { ret_print("ID"); }
-{ICONST}        { ret_print("ICONST"); }
-{FCONST}        { ret_print("FCONST"); }
-{CCONST}        { ret_print("CCONST"); }
-{STRING}        { ret_print("STRING"); }
-{TYPE}"[]"      { ret_print("KEYWORD_TABLE");  }
  
 "\n"            { lineno += 1; }
-[ \t\r\f]+          /* eat up whitespace */
- 
+[ \t\r\f]+          
 .               { yyerror("Unrecognized character"); }
  
 %%
@@ -102,10 +107,28 @@ void yyerror(char *message){
     printf("Error: \"%s\" in line %d. Token = %s\n", message, lineno, yytext);
     exit(1);
 }
+
  
 int main(int argc, char *argv[]){
-    yyin = fopen(argv[1], "r");
-    yylex();
-    fclose(yyin);
-    return 0;
+
+    // initialize symbol table
+	init_hash_table();
+
+	// open input file
+	yyin = fopen(argv[1], "r");
+	
+	// lexical analysis
+	yylex();
+	fclose(yyin);
+	fclose(yyout);
+	// symbol table dump
+	
+	
+	
+
+    	
+	
+	return 0;
 }
+
+
