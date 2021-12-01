@@ -15,7 +15,6 @@ typedef struct RefList{
     struct RefList *next;
 }RefList;
 
-// struct that represents a list node
 typedef struct list_t{
 	char st_name[40];
     int st_size;
@@ -26,8 +25,8 @@ typedef struct list_t{
 
 static list_t **hash_table;
 
-void init_hash_table(); // initialize hash table
-unsigned int hash(char *key); // hash function 
+void init_hash_table(); 
+unsigned int hash(char *key); 
 void insert(char *name, int len, int type, int lineno); 
 void affiche_table(FILE *of);
 
