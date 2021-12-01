@@ -111,22 +111,13 @@ void yyerror(char *message){
  
 int main(int argc, char *argv[]){
 
-    // initialize symbol table
 	init_hash_table();
 
-	// open input file
 	yyin = fopen(argv[1], "r");
 	
-	// lexical analysis
 	yylex();
 	fclose(yyin);
 	fclose(yyout);
-	// symbol table dump
-	
-	
-	
-
-    	
 	
 	return 0;
 }
