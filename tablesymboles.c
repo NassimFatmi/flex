@@ -51,11 +51,9 @@ void insert(char *name, int len, int type, int lineno){
 	
 	while ((l != NULL) && (strcmp(name,l->st_name) != 0)) l = l->next;
 	
-	/* variable not yet in table */
 	if (l == NULL){
 		l = (list_t*) malloc(sizeof(list_t));
 		strcpy(l->st_name, name);  
-		/* add to hashtable */
 		l->st_type = type;
 		l->lines = (RefList*) malloc(sizeof(RefList));
 		l->lines->lineno = lineno;
