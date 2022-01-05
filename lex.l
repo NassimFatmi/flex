@@ -10,7 +10,7 @@
     // #endif
 
     int lineno = 1; // initialize to 1
-    // int err_lex = 0;
+    int err_lex = 0;
     // void ret_print(char *token_type);
     // void yyerror();
 	// FILE *yyin;

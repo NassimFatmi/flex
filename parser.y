@@ -112,6 +112,7 @@ expression:
 	|variable 						
 	|sign constant 
 	|fonction_call
+	|struct_call	{printf("\n Acceder a un champ d'un enregistrement a la ligne %d\n", lineno);};
 ;
 
 sign: ADDOP | SUBOP | /* vide */ ; 
@@ -128,6 +129,7 @@ call_params: call_param | /* vide */;
 
 call_param : call_param COMMA variable | variable ;
 
+struct_call : ID DOT variable;
 
 %%
 

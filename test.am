@@ -30,7 +30,7 @@ main()
     a=1;
     b=0;
 
-    if((!a) && (a || b))
+    if((enreg.a == b) && (a || b))
     {
         a = 1;
         break;
