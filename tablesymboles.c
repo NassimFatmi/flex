@@ -7,14 +7,14 @@
 #define FLOAT_TYPE 2
 #define STR_TYPE 3
 #define CHAR_TYPE 4
-#define ARRAY_TYPE 5
-#define FUNCTION_TYPE 6
+#define TABLE_TYPE 5
 
 typedef struct RefList{ 
     int lineno;
     struct RefList *next;
 }RefList;
 
+// struct that represents a list node
 typedef struct list_t{
 	char st_name[40];
     int st_size;
@@ -25,8 +25,8 @@ typedef struct list_t{
 
 static list_t **hash_table;
 
-void init_hash_table(); 
-unsigned int hash(char *key); 
+void init_hash_table(); // initialize hash table
+unsigned int hash(char *key);
 void insert(char *name, int len, int type, int lineno); 
 void affiche_table(FILE *of);
 
@@ -51,9 +51,11 @@ void insert(char *name, int len, int type, int lineno){
 	
 	while ((l != NULL) && (strcmp(name,l->st_name) != 0)) l = l->next;
 	
+	/* variable not yet in table */
 	if (l == NULL){
 		l = (list_t*) malloc(sizeof(list_t));
 		strcpy(l->st_name, name);  
+		/* add to hashtable */
 		l->st_type = type;
 		l->lines = (RefList*) malloc(sizeof(RefList));
 		l->lines->lineno = lineno;
@@ -88,7 +90,9 @@ void affiche_table(FILE * of){
 			else if (l->st_type == FLOAT_TYPE) fprintf(of,"%-7s","float");
 			else if (l->st_type == STR_TYPE) fprintf(of,"%-7s","string");
 			else if (l->st_type == CHAR_TYPE) fprintf(of,"%-7s","char");
+			else if (l->st_type == TABLE_TYPE) fprintf(of,"%-7s","table"); 
 			else if (l->st_type == UNDEF) fprintf(of,"%-7s","ID"); 
+			
 			while (t != NULL){
 				fprintf(of,"%4d ",t->lineno);
 			t = t->next;
