@@ -2,7 +2,10 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-    #include "parser.tab.h"
+    #include "symtab.h"
+	#include "semantics.h"
+	#include "ast.h"
+	#include "parser.tab.h"
 
     // #ifndef BOOL
     // # define BOOL
@@ -12,9 +15,9 @@
     int lineno = 1; // initialize to 1
     int err_lex = 0;
     // void ret_print(char *token_type);
-    // void yyerror();
-	// FILE *yyin;
-	// FILE *yyout;
+    void yyerror();
+	extern FILE *yyin;
+	extern FILE *yyout;
 
     
 %}
@@ -62,8 +65,8 @@ ID          {alpha}+{alnum}*
 "="            { return(ASSIGN);}
  
  
-"+"                     { return(ADDOP);}
-"-"                     { return(SUBOP);}
+"+"                     { yylval.val.ival = ADD; return ADDOP; }
+"-"                     { yylval.val.ival = SUB; return ADDOP; }
 "*"                     { return(MULOP);}
 "/"                     { return(DIVOP);}
 "%"                     { return(MODOP);}
@@ -74,12 +77,12 @@ ID          {alpha}+{alnum}*
 "!"                     { return(NOTOP);}
 
 
-"=="                    {return(EQUOP);}
-"#"                     { return(NEQUOP);}
-">"                     { return(SUPSOP);}
-"<"                     { return(INFSOP);}
-">="                    { return(SUPOP);}
-"<="                    { return(INFOP);}
+"=="				    { yylval.val.ival = EQUAL; return EQUOP; }
+"!="				    { yylval.val.ival = NOT_EQUAL; return NEQUOP; }
+">"						{ yylval.val.ival = GREATER; return SUPSOP; }
+"<"						{ yylval.val.ival = LESS; return INFSOP; }
+">="					{ yylval.val.ival = GREATER_EQUAL; return SUPOP; }
+"<="					{ yylval.val.ival = LESS_EQUAL; return INFOP; }
  
  
 "("             { return(LPAREN);}
@@ -93,11 +96,19 @@ ID          {alpha}+{alnum}*
 ","             { return(COMMA);}
 
 
-{ICONST}        { return(ICONST);}
-{FCONST}        { return(FCONST);}
-{CCONST}        { return(CCONST);}
-{STRING}        { return(STRING);}
-{ID}            { return(ID);}
+{ID}            {
+                    // insert identifier into symbol table
+                    insert(yytext, strlen(yytext), UNDEF, lineno);
+                    yylval.symtab_item = lookup(yytext);
+                    return ID;
+                }
+{ICONST} 	    { yylval.val.ival = atoi(yytext); return ICONST; }
+{FCONST} 		{ yylval.val.fval = atof(yytext); return FCONST; }
+{CCONST} 		{ yylval.val.cval = yytext[0];    return CCONST; }
+{STRING} 		{ 
+				   yylval.val.sval = malloc(yyleng * sizeof(char));
+				   strcpy(yylval.val.sval, yytext);  return STRING;
+				}
 {ID}"[]"        { return(TABLE);}
  
  

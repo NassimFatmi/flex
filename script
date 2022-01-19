@@ -1,0 +1,4 @@
+bison -d parser.y  
+flex lex.l  
+gcc -o output parser.tab.c lex.yy.c  
+./output test.am

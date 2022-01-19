@@ -1,20 +1,21 @@
-/* A Bison parser, made by GNU Bison 3.7.4.  */
 
-/* Bison interface for Yacc-like parsers in C
+/* A Bison parser, made by GNU Bison 2.4.1.  */
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
-   Inc.
-
+/* Skeleton interface for Bison's Yacc-like parsers in C
+   
+      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
+   
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-
+   
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-
+   
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
@@ -27,89 +28,92 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-
+   
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
-   especially those whose name start with YY_ or yy_.  They are
-   private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_PARSER_TAB_H_INCLUDED
-# define YY_YY_PARSER_TAB_H_INCLUDED
-/* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
-#if YYDEBUG
-extern int yydebug;
-#endif
-
-/* Token kinds.  */
+/* Tokens.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-  enum yytokentype
-  {
-    YYEMPTY = -2,
-    YYEOF = 0,                     /* "end of file"  */
-    YYerror = 256,                 /* error  */
-    YYUNDEF = 257,                 /* "invalid token"  */
-    CHAR = 258,                    /* CHAR  */
-    INT = 259,                     /* INT  */
-    FLOAT = 260,                   /* FLOAT  */
-    KSTRING = 261,                 /* KSTRING  */
-    STRUCT = 262,                  /* STRUCT  */
-    VOID = 263,                    /* VOID  */
-    MAIN = 264,                    /* MAIN  */
-    IF = 265,                      /* IF  */
-    ELSE = 266,                    /* ELSE  */
-    WHILE = 267,                   /* WHILE  */
-    BREAK = 268,                   /* BREAK  */
-    RETURN = 269,                  /* RETURN  */
-    ASSIGN = 270,                  /* ASSIGN  */
-    ADDOP = 271,                   /* ADDOP  */
-    SUBOP = 272,                   /* SUBOP  */
-    MULOP = 273,                   /* MULOP  */
-    DIVOP = 274,                   /* DIVOP  */
-    MODOP = 275,                   /* MODOP  */
-    OROP = 276,                    /* OROP  */
-    ANDOP = 277,                   /* ANDOP  */
-    NOTOP = 278,                   /* NOTOP  */
-    EQUOP = 279,                   /* EQUOP  */
-    NEQUOP = 280,                  /* NEQUOP  */
-    SUPSOP = 281,                  /* SUPSOP  */
-    INFSOP = 282,                  /* INFSOP  */
-    SUPOP = 283,                   /* SUPOP  */
-    INFOP = 284,                   /* INFOP  */
-    LPAREN = 285,                  /* LPAREN  */
-    RPAREN = 286,                  /* RPAREN  */
-    LBRACK = 287,                  /* LBRACK  */
-    RBRACK = 288,                  /* RBRACK  */
-    LBRACE = 289,                  /* LBRACE  */
-    RBRACE = 290,                  /* RBRACE  */
-    SEMI = 291,                    /* SEMI  */
-    DOT = 292,                     /* DOT  */
-    COMMA = 293,                   /* COMMA  */
-    ICONST = 294,                  /* ICONST  */
-    FCONST = 295,                  /* FCONST  */
-    CCONST = 296,                  /* CCONST  */
-    STRING = 297,                  /* STRING  */
-    ID = 298,                      /* ID  */
-    TABLE = 299                    /* TABLE  */
-  };
-  typedef enum yytokentype yytoken_kind_t;
+   /* Put the tokens into the symbol table, so that GDB and other debuggers
+      know about them.  */
+   enum yytokentype {
+     CHAR = 258,
+     INT = 259,
+     FLOAT = 260,
+     KSTRING = 261,
+     STRUCT = 262,
+     VOID = 263,
+     MAIN = 264,
+     IF = 265,
+     ELSE = 266,
+     WHILE = 267,
+     BREAK = 268,
+     RETURN = 269,
+     ASSIGN = 270,
+     ADDOP = 271,
+     SUBOP = 272,
+     MULOP = 273,
+     DIVOP = 274,
+     MODOP = 275,
+     OROP = 276,
+     ANDOP = 277,
+     NOTOP = 278,
+     EQUOP = 279,
+     NEQUOP = 280,
+     SUPSOP = 281,
+     INFSOP = 282,
+     SUPOP = 283,
+     INFOP = 284,
+     LPAREN = 285,
+     RPAREN = 286,
+     LBRACK = 287,
+     RBRACK = 288,
+     LBRACE = 289,
+     RBRACE = 290,
+     SEMI = 291,
+     DOT = 292,
+     COMMA = 293,
+     ICONST = 294,
+     FCONST = 295,
+     CCONST = 296,
+     STRING = 297,
+     ID = 298,
+     TABLE = 299
+   };
 #endif
 
-/* Value type.  */
+
+
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+{
+
+/* Line 1676 of yacc.c  */
+#line 27 "parser.y"
+
+	// different types of values
+	Value val;   
+	
+	// structures
+	list_t* symtab_item;
+	AST_Node* node;
+	
+	// for declarations
+	int data_type;
+	int const_type;
+
+
+
+/* Line 1676 of yacc.c  */
+#line 111 "parser.tab.h"
+} YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
+# define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
-
 extern YYSTYPE yylval;
 
-int yyparse (void);
 
-#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
