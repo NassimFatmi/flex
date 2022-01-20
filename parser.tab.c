@@ -526,9 +526,9 @@ static const yytype_uint16 yyrline[] =
      133,   133,   133,   135,   137,   137,   141,   141,   141,   144,
      145,   146,   147,   148,   149,   152,   154,   155,   158,   160,
      160,   163,   168,   173,   178,   183,   188,   193,   198,   203,
-     208,   213,   218,   223,   228,   233,   237,   238,   239,   240,
-     243,   243,   243,   246,   247,   248,   251,   251,   251,   251,
-     253,   255,   257,   257,   259,   259,   261
+     208,   213,   218,   223,   228,   233,   237,   241,   242,   243,
+     246,   246,   246,   249,   250,   251,   254,   254,   254,   254,
+     256,   258,   260,   260,   262,   262,   264
 };
 #endif
 
@@ -1870,45 +1870,54 @@ yyreduce:
 	;}
     break;
 
+  case 66:
+
+/* Line 1455 of yacc.c  */
+#line 238 "parser.y"
+    {
+		(yyval.node) = (yyvsp[(1) - (1)].symtab_item);
+	;}
+    break;
+
   case 69:
 
 /* Line 1455 of yacc.c  */
-#line 240 "parser.y"
+#line 243 "parser.y"
     {printf("\n Acceder a un champ d'un enregistrement a la ligne %d\n", lineno);;}
     break;
 
   case 73:
 
 /* Line 1455 of yacc.c  */
-#line 246 "parser.y"
+#line 249 "parser.y"
     { (yyval.node) = new_ast_const_node(INT_TYPE, (yyvsp[(1) - (1)].val));  ;}
     break;
 
   case 74:
 
 /* Line 1455 of yacc.c  */
-#line 247 "parser.y"
+#line 250 "parser.y"
     { (yyval.node) = new_ast_const_node(FLOAT_TYPE, (yyvsp[(1) - (1)].val)); ;}
     break;
 
   case 75:
 
 /* Line 1455 of yacc.c  */
-#line 248 "parser.y"
+#line 251 "parser.y"
     { (yyval.node) = new_ast_const_node(CHAR_TYPE, (yyvsp[(1) - (1)].val)); ;}
     break;
 
   case 81:
 
 /* Line 1455 of yacc.c  */
-#line 255 "parser.y"
+#line 258 "parser.y"
     {printf("\n Appel d'une fonction a la ligne %d\n", lineno);;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1912 "parser.tab.c"
+#line 1921 "parser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2120,7 +2129,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 263 "parser.y"
+#line 266 "parser.y"
 
 
 void yyerror ()

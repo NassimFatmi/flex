@@ -234,7 +234,10 @@ expression:
 	{
 		$$ = $2; /* just pass information */
 	}
-	|variable 						
+	|variable 
+	{
+		$$ = $1;
+	}					
 	|sign constant 
 	|fonction_call
 	|struct_call	{printf("\n Acceder a un champ d'un enregistrement a la ligne %d\n", lineno);};

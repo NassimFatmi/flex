@@ -57,20 +57,6 @@ void insert(char *name, int len, int type, int lineno)
 			hash_table[hashval] = l;
 			printf("Inserted %s for the first time with linenumber %d!\n", name, lineno);
 		}
-		else
-		{
-			/* add it to check it again later */
-			l = (list_t *)malloc(sizeof(list_t));
-			strncpy(l->st_name, name, len);
-			l->st_type = type;
-			l->scope = cur_scope;
-			l->lines = (RefList *)malloc(sizeof(RefList));
-			l->lines->lineno = lineno;
-			l->lines->next = NULL;
-			l->next = hash_table[hashval];
-			hash_table[hashval] = l;
-			printf("Inserted %s at line %d to check it again later!\n", name, lineno);
-		}
 	}
 	/* found in table */
 	else
