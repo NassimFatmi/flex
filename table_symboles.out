@@ -1,6 +1,6 @@
 ------------ -------------- ------ ------------
 Name         Type           Scope  Line Numbers
 ------------ -------------- ------ ------------
-aÁi          undef            0     2 
-fi          undef            0     3 
-o±i          undef            0     1 
+a            int              0     2 
+f            real             0     3 
+o            char             0     1 

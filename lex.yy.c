@@ -996,7 +996,7 @@ YY_RULE_SETUP
 case 51:
 YY_RULE_SETUP
 #line 117 "lex.l"
-{ fprintf(stderr, "Lexeme inconnu a la ligne %d\n", lineno); err_lex=1;}
+{ printf("Lexeme inconnu a la ligne %d\n", lineno); err_lex=1; return 1;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP

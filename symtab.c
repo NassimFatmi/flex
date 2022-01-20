@@ -45,7 +45,7 @@ void insert(char *name, int len, int type, int lineno)
 		{
 			/* set up entry */
 			l = (list_t *)malloc(sizeof(list_t));
-			strncpy(l->st_name, name, len);
+			strcpy(l->st_name, name);
 			l->st_type = type;
 			l->scope = cur_scope;
 			l->lines = (RefList *)malloc(sizeof(RefList));

@@ -1633,7 +1633,7 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 108 "parser.y"
     {
-		/* add_to_names($1); */
+		add_to_names((yyvsp[(1) - (1)].symtab_item));
 	;}
     break;
 

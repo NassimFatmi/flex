@@ -114,6 +114,6 @@ ID          {alpha}+{alnum}*
  
 "\n"            { lineno += 1; }
 [ \t\r\f]+          
-.               { fprintf(stderr, "Lexeme inconnu a la ligne %d\n", lineno); err_lex=1;}
+.               { printf("Lexeme inconnu a la ligne %d\n", lineno); err_lex=1; return 1;}
  
 %%

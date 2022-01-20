@@ -106,7 +106,7 @@ names:
 	}
 	| variable
 	{
-		/* add_to_names($1); */
+		add_to_names($1);
 	}
 ;
 

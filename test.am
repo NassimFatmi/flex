@@ -1,24 +1,8 @@
 char o;
 integer a;
 float f;
-
+²
 main()
 {
-  if (a < b)
-  {
-  }
-
-  if(a == b) {
-
-  }
-
-  if(a || b) {
-
-  }
-  if(a && b) {
-    
-  }
-
-  if(f == a) {}
-  c = a + b;
+  
 }
