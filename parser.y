@@ -303,6 +303,13 @@ assigment: var_ref ASSIGN expression SEMI {
 	AST_Node_Ref *temp = (AST_Node_Ref*) $1;
 	$$ = new_ast_assign_node(temp->entry, temp->ref, $3);
 	ast_traversal($$);
+
+	// check assignment semantics
+  get_result_type(
+    get_type(temp->entry->st_name), /* variable datatype */
+    expression_data_type($3),       /* expression datatype */
+    NONE  /* checking compatibility only (no operator) */
+  );
 };
 
 var_ref: variable

@@ -529,7 +529,7 @@ static const yytype_uint16 yyrline[] =
      161,   164,   169,   174,   179,   184,   189,   194,   199,   204,
      209,   214,   219,   224,   229,   234,   238,   242,   273,   274,
      277,   289,   295,   296,   297,   300,   300,   300,   300,   302,
-     308,   314,   316,   316,   318,   318,   320
+     315,   321,   323,   323,   325,   325,   327
 };
 #endif
 
@@ -1977,13 +1977,20 @@ yyreduce:
 	AST_Node_Ref *temp = (AST_Node_Ref*) (yyvsp[(1) - (4)].node);
 	(yyval.node) = new_ast_assign_node(temp->entry, temp->ref, (yyvsp[(3) - (4)].node));
 	ast_traversal((yyval.node));
+
+	// check assignment semantics
+  get_result_type(
+    get_type(temp->entry->st_name), /* variable datatype */
+    expression_data_type((yyvsp[(3) - (4)].node)),       /* expression datatype */
+    NONE  /* checking compatibility only (no operator) */
+  );
 ;}
     break;
 
   case 80:
 
 /* Line 1455 of yacc.c  */
-#line 309 "parser.y"
+#line 316 "parser.y"
     {
 		(yyval.node) = new_ast_ref_node((yyvsp[(1) - (1)].symtab_item), 0); /* no reference */
 	;}
@@ -1992,14 +1999,14 @@ yyreduce:
   case 81:
 
 /* Line 1455 of yacc.c  */
-#line 314 "parser.y"
+#line 321 "parser.y"
     {printf("\n Appel d'une fonction a la ligne %d\n", lineno);;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 2003 "parser.tab.c"
+#line 2010 "parser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2211,7 +2218,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 322 "parser.y"
+#line 329 "parser.y"
 
 
 void yyerror ()

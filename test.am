@@ -4,6 +4,14 @@ float f;
 
 main()
 {
-  a = a + 1.0;
+  !! type de résultat est integer et le type de a est integer
   a = a + 1;
+
+  !! erreur sémantique entre integer et float
+  a = f + 1.0;
+
+  !! erreur entre le type integer et le type float
+  if(a == f) {
+
+  }
 }
