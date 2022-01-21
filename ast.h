@@ -123,10 +123,12 @@ typedef struct AST_Node_Assign
 	// symbol table entry
 	list_t *entry;
 
+	// reference or not
+	int ref; // 0: not reference, 1: reference
+
 	// assignment value
 	struct AST_Node *assign_val;
 } AST_Node_Assign;
-
 /* Expressions */
 typedef struct AST_Node_Arithm
 {
@@ -142,6 +144,9 @@ typedef struct AST_Node_Arithm
 typedef struct AST_Node_Bool
 {
 	enum Node_Type type; // node type
+
+	// data type of result
+	int data_type;
 
 	// operator
 	enum Bool_op op;
@@ -165,6 +170,9 @@ typedef struct AST_Node_Rel
 {
 	enum Node_Type type; // node type
 
+	// data type of result
+	int data_type;
+
 	// operator
 	enum Rel_op op;
 
@@ -175,6 +183,9 @@ typedef struct AST_Node_Rel
 typedef struct AST_Node_Equ
 {
 	enum Node_Type type; // node type
+
+	// data type of result
+	int data_type;
 
 	// operator
 	enum Equ_op op;
@@ -195,7 +206,7 @@ AST_Node *new_ast_const_node(int const_type, Value val);										 // constant
 AST_Node *new_ast_if_node(AST_Node *condition, AST_Node *if_branch, AST_Node **elsif_branches,
 													int elseif_count, AST_Node *else_branch);
 AST_Node *new_ast_while_node(AST_Node *condition, AST_Node *while_branch);
-AST_Node *new_ast_assign_node(list_t *entry, AST_Node *assign_val);
+AST_Node *new_ast_assign_node(list_t *entry, int ref, AST_Node *assign_val);
 AST_Node *new_ast_simple_node(int statement_type); // continue, break or "main" return
 
 /* Expressions */
@@ -204,6 +215,7 @@ AST_Node *new_ast_bool_node(enum Bool_op op, AST_Node *left, AST_Node *right);
 AST_Node *new_ast_rel_node(enum Rel_op op, AST_Node *left, AST_Node *right);
 AST_Node *new_ast_equ_node(enum Equ_op op, AST_Node *left, AST_Node *right);
 AST_Node *new_ast_ref_node(list_t *entry, int ref);
+int expression_data_type(AST_Node *node);
 
 /* Tree Traversal */
 void ast_print_node(AST_Node *node); // print information of node

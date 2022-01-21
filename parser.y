@@ -58,7 +58,7 @@
 %type <node> constant
 %type <val> sign
 %type <node> expression var_ref
-
+%type <node> assigment
 
 %start program
 
@@ -298,7 +298,11 @@ constant:
 
 type_return : ICONST | FCONST | CCONST | STRING;
 
-assigment: variable ASSIGN expression SEMI ;
+assigment: var_ref ASSIGN expression SEMI {
+	AST_Node_Ref *temp = (AST_Node_Ref*) $1;
+	$$ = new_ast_assign_node(temp->entry, temp->ref, $3);
+	ast_traversal($$);
+};
 
 var_ref: variable
 	{
