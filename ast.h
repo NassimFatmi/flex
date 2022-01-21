@@ -15,6 +15,7 @@ typedef enum Node_Type
 	BOOL_NODE,	 // boolean expression
 	REL_NODE,		 // relational expression
 	EQU_NODE,		 // equality expression
+	REF_NODE,
 } Node_Type;
 
 /* --------------------OPERATOR TYPES----------------------- */
@@ -149,6 +150,17 @@ typedef struct AST_Node_Bool
 	struct AST_Node *right; // right child
 } AST_Node_Bool;
 
+typedef struct AST_Node_Ref
+{
+	enum Node_Type type; // node type
+
+	// symbol table entry
+	list_t *entry;
+
+	// reference or not1
+	int ref; // 0: not reference, 1: reference
+} AST_Node_Ref;
+
 typedef struct AST_Node_Rel
 {
 	enum Node_Type type; // node type
@@ -184,13 +196,14 @@ AST_Node *new_ast_if_node(AST_Node *condition, AST_Node *if_branch, AST_Node **e
 													int elseif_count, AST_Node *else_branch);
 AST_Node *new_ast_while_node(AST_Node *condition, AST_Node *while_branch);
 AST_Node *new_ast_assign_node(list_t *entry, AST_Node *assign_val);
-AST_Node *new_ast_simple_node(int statement_type);																	 // continue, break or "main" return
+AST_Node *new_ast_simple_node(int statement_type); // continue, break or "main" return
 
 /* Expressions */
 AST_Node *new_ast_arithm_node(enum Arithm_op op, AST_Node *left, AST_Node *right);
 AST_Node *new_ast_bool_node(enum Bool_op op, AST_Node *left, AST_Node *right);
 AST_Node *new_ast_rel_node(enum Rel_op op, AST_Node *left, AST_Node *right);
 AST_Node *new_ast_equ_node(enum Equ_op op, AST_Node *left, AST_Node *right);
+AST_Node *new_ast_ref_node(list_t *entry, int ref);
 
 /* Tree Traversal */
 void ast_print_node(AST_Node *node); // print information of node

@@ -1,8 +1,9 @@
 char o;
 integer a;
 float f;
-²
+
 main()
 {
-  
+  a = a * 2;
+  f = f * a;
 }

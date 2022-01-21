@@ -57,7 +57,7 @@
 %type <symtab_item> variable
 %type <node> constant
 %type <val> sign
-%type <node> expression
+%type <node> expression var_ref
 
 
 %start program
@@ -234,16 +234,61 @@ expression:
 	{
 		$$ = $2; /* just pass information */
 	}
-	|variable 
+	|var_ref 
 	{
 		$$ = $1;
 	}					
-	|sign constant 
+	|sign constant
+	{
+		{
+		/* sign */
+		if($1.ival == 1){
+			AST_Node_Const *temp = (AST_Node_Const*) $2;
+
+			/* inverse value depending on the constant type */
+			switch(temp->const_type){
+				case INT_TYPE:
+					temp->val.ival *= -1;
+					break;
+				case FLOAT_TYPE:
+					temp->val.fval *= -1;
+					break;
+				case CHAR_TYPE:
+					/* sign before char error */
+					fprintf(stderr,
+					    "Error having sign before character constant!\n");
+					exit(1);
+					break;
+			}
+			$$ = (AST_Node*) temp;
+		}
+		/* no sign */
+		else{
+			$$ = $2;
+		}
+	    ast_traversal($$); /* just for testing */
+	}
+	}
 	|fonction_call
 	|struct_call	{printf("\n Acceder a un champ d'un enregistrement a la ligne %d\n", lineno);};
 ;
 
-sign: ADDOP | SUBOP | /* vide */ ; 
+sign: ADDOP 
+		{ 
+		/* plus sign error */
+		if($1.ival == ADD){
+			fprintf(stderr, "Error having plus as a sign!\n");
+			exit(1);
+		}
+		else{
+			$$.ival = 1; /* sign */
+		}
+	}
+	| /* empty */
+	{ 
+		$$.ival = 0; /* no sign */
+	} 
+ 	| SUBOP | /* vide */ ; 
 
 constant: 
 		ICONST   { $$ = new_ast_const_node(INT_TYPE, $1);  }
@@ -254,6 +299,12 @@ constant:
 type_return : ICONST | FCONST | CCONST | STRING;
 
 assigment: variable ASSIGN expression SEMI ;
+
+var_ref: variable
+	{
+		$$ = new_ast_ref_node($1, 0); /* no reference */
+	}
+; 
 
 fonction_call: ID LPAREN call_params RPAREN		{printf("\n Appel d'une fonction a la ligne %d\n", lineno);};
 

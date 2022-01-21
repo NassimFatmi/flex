@@ -157,6 +157,20 @@ AST_Node *new_ast_equ_node(enum Equ_op op, AST_Node *left, AST_Node *right)
 	return (struct AST_Node *)v;
 }
 
+AST_Node *new_ast_ref_node(list_t *entry, int ref)
+{
+	// allocate memory
+	AST_Node_Ref *v = malloc(sizeof(AST_Node_Ref));
+
+	// set entries
+	v->type = REF_NODE;
+	v->entry = entry;
+	v->ref = ref;
+
+	// return type-casted result
+	return (struct AST_Node *)v;
+}
+
 /* Tree Traversal */
 
 void ast_print_node(AST_Node *node)
@@ -164,12 +178,12 @@ void ast_print_node(AST_Node *node)
 	/* temp nodes */
 	AST_Node_Decl *temp_decl;
 	AST_Node_Const *temp_const;
-	AST_Node_If *temp_if;
 	AST_Node_Assign *temp_assign;
 	AST_Node_Arithm *temp_arithm;
 	AST_Node_Bool *temp_bool;
 	AST_Node_Rel *temp_rel;
 	AST_Node_Equ *temp_equ;
+	AST_Node_Ref *temp_ref;
 
 	switch (node->type)
 	{
@@ -197,13 +211,6 @@ void ast_print_node(AST_Node *node)
 			break;
 		}
 		break;
-	case IF_NODE:
-		temp_if = (struct AST_Node_If *)node;
-		printf("If Node with %d elseifs\n", temp_if->elseif_count);
-		break;
-	case WHILE_NODE:
-		printf("While Node\n");
-		break;
 	case ASSIGN_NODE:
 		temp_assign = (struct AST_Node_Assign *)node;
 		printf("Assign Node of entry %s\n", temp_assign->entry->st_name);
@@ -223,6 +230,10 @@ void ast_print_node(AST_Node *node)
 	case EQU_NODE:
 		temp_equ = (struct AST_Node_Equ *)node;
 		printf("Equality Node of operator %d\n", temp_equ->op);
+		break;
+	case REF_NODE:
+		temp_ref = (struct AST_Node_Ref *)node;
+		printf("Reference Node of entry %s\n", temp_ref->entry->st_name);
 		break;
 	default: /* wrong choice case */
 		fprintf(stderr, "Error in node selection!\n");
@@ -246,27 +257,6 @@ void ast_traversal(AST_Node *node)
 		ast_traversal(node->left);
 		ast_traversal(node->right);
 		ast_print_node(node); // postfix
-	}
-	/* the if case */
-	else if (node->type == IF_NODE)
-	{
-		AST_Node_If *temp_if = (struct AST_Node_If *)node;
-		ast_traversal(temp_if->condition);
-		ast_traversal(temp_if->if_branch);
-		for (i = 0; i < temp_if->elseif_count; i++)
-		{
-			ast_traversal(temp_if->elsif_branches[i]);
-		}
-		ast_traversal(temp_if->else_branch);
-		ast_print_node(node);
-	}
-	/* while case */
-	else if (node->type == WHILE_NODE)
-	{
-		AST_Node_While *temp_while = (struct AST_Node_While *)node;
-		ast_traversal(temp_while->condition);
-		ast_traversal(temp_while->while_branch);
-		ast_print_node(node);
 	}
 	/* assign case */
 	else if (node->type == ASSIGN_NODE)
