@@ -109,6 +109,13 @@ AST_Node *new_ast_arithm_node(enum Arithm_op op, AST_Node *left, AST_Node *right
 	v->left = left;
 	v->right = right;
 
+	// set data type
+	v->data_type = get_result_type(
+			expression_data_type(left),	 /* data type of left expression */
+			expression_data_type(right), /* data type of right expression */
+			ARITHM_OP										 /* operation type */
+	);
+
 	// return type-casted result
 	return (struct AST_Node *)v;
 }
@@ -123,6 +130,24 @@ AST_Node *new_ast_bool_node(enum Bool_op op, AST_Node *left, AST_Node *right)
 	v->op = op;
 	v->left = left;
 	v->right = right;
+
+	// set data type
+	if (v->op != NOT)
+	{ /* AND or OR */
+		v->data_type = get_result_type(
+				expression_data_type(left),	 /* data type of left expression */
+				expression_data_type(right), /* data type of right expression */
+				BOOL_OP											 /* operation type */
+		);
+	}
+	else
+	{ /* NOT */
+		v->data_type = get_result_type(
+				expression_data_type(left), /* data type of left expression */
+				UNDEF,											/* there is no right expression */
+				NOT_OP											/* operation type */
+		);
+	}
 
 	// return type-casted result
 	return (struct AST_Node *)v;
@@ -139,6 +164,13 @@ AST_Node *new_ast_rel_node(enum Rel_op op, AST_Node *left, AST_Node *right)
 	v->left = left;
 	v->right = right;
 
+	// set data type
+	v->data_type = get_result_type(
+			expression_data_type(left),	 /* data type of left expression  */
+			expression_data_type(right), /* data type of right expression */
+			REL_OP											 /* operation type */
+	);
+
 	// return type-casted result
 	return (struct AST_Node *)v;
 }
@@ -153,6 +185,13 @@ AST_Node *new_ast_equ_node(enum Equ_op op, AST_Node *left, AST_Node *right)
 	v->op = op;
 	v->left = left;
 	v->right = right;
+
+	// set data type
+	v->data_type = get_result_type(
+			expression_data_type(left),	 /* data type of left expression  */
+			expression_data_type(right), /* data type of right expression */
+			EQU_OP											 /* operation type */
+	);
 
 	// return type-casted result
 	return (struct AST_Node *)v;
@@ -172,8 +211,66 @@ AST_Node *new_ast_ref_node(list_t *entry, int ref)
 	return (struct AST_Node *)v;
 }
 
-/* Tree Traversal */
+int expression_data_type(AST_Node *node)
+{
+	/* temp nodes */
+	AST_Node_Arithm *temp_arithm;
+	AST_Node_Bool *temp_bool;
+	AST_Node_Rel *temp_rel;
+	AST_Node_Equ *temp_equ;
+	AST_Node_Ref *temp_ref;
+	AST_Node_Const *temp_const;
 
+	/* return type depends on the AST node type */
+	switch (node->type)
+	{
+	case ARITHM_NODE: /* arithmetic expression */
+		temp_arithm = (AST_Node_Arithm *)node;
+		return temp_arithm->data_type;
+		break;
+
+	case BOOL_NODE: /* boolean expression */
+		temp_bool = (AST_Node_Bool *)node;
+		return temp_bool->data_type;
+		break;
+
+	case REL_NODE: /* relational expression */
+		temp_rel = (AST_Node_Rel *)node;
+		return temp_rel->data_type;
+		break;
+
+	case EQU_NODE: /* equality expression */
+		temp_equ = (AST_Node_Equ *)node;
+		return temp_equ->data_type;
+		break;
+
+	case REF_NODE: /* identifier reference */
+		temp_ref = (AST_Node_Ref *)node;
+		/* if "simple" type */
+		int type = temp_ref->entry->st_type;
+		if (type == INT_TYPE || type == FLOAT_TYPE || type == CHAR_TYPE)
+		{
+			return temp_ref->entry->st_type;
+		}
+		/* if array or pointer */
+		else
+		{
+			return temp_ref->entry->inf_type;
+		}
+		break;
+
+	case CONST_NODE: /* constant */
+		temp_const = (AST_Node_Const *)node;
+		return temp_const->const_type; /* constant data type */
+		break;
+
+	default: /* wrong choice case */
+		fprintf(stderr, "Error in node selection!\n");
+		exit(1);
+	}
+}
+
+/* Tree Traversal */
 void ast_print_node(AST_Node *node)
 {
 	/* temp nodes */
@@ -210,6 +307,9 @@ void ast_print_node(AST_Node *node)
 		case CHAR_TYPE:
 			printf("%c\n", temp_const->val.cval);
 			break;
+		case STR_TYPE:
+			printf("%s\n", temp_const->val.sval);
+			break;
 		}
 		break;
 	case ASSIGN_NODE:
@@ -218,7 +318,7 @@ void ast_print_node(AST_Node *node)
 		break;
 	case ARITHM_NODE:
 		temp_arithm = (struct AST_Node_Arithm *)node;
-		printf("Arithmetic Node of operator %d\n", temp_arithm->op);
+		printf("Arithmetic Node of operator %d with result type %d\n", temp_arithm->op, temp_arithm->data_type);
 		break;
 	case BOOL_NODE:
 		temp_bool = (struct AST_Node_Bool *)node;
@@ -255,16 +355,17 @@ void ast_traversal(AST_Node *node)
 	/* left and right child cases */
 	if (node->type == BASIC_NODE || node->type == ARITHM_NODE || node->type == BOOL_NODE || node->type == REL_NODE || node->type == EQU_NODE)
 	{
-		ast_traversal(node->left);
-		ast_traversal(node->right);
+		//ast_traversal(node->left);
+		//ast_traversal(node->right);
 		ast_print_node(node); // postfix
 	}
 	/* assign case */
 	else if (node->type == ASSIGN_NODE)
 	{
 		AST_Node_Assign *temp_assign = (struct AST_Node_Assign *)node;
-		ast_traversal(temp_assign->assign_val);
 		ast_print_node(node);
+		printf("Assigning:\n");
+		ast_traversal(temp_assign->assign_val);
 	}
 	/* others */
 	else

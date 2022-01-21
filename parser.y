@@ -2,6 +2,7 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <string.h>
+	#include "semantics.c"
 	#include "symtab.c"
 	#include "ast.h"
 	#include "ast.c"
@@ -273,8 +274,8 @@ expression:
 	|struct_call	{printf("\n Acceder a un champ d'un enregistrement a la ligne %d\n", lineno);};
 ;
 
-sign: ADDOP 
-		{ 
+sign: ADDOP
+	{ 
 		/* plus sign error */
 		if($1.ival == ADD){
 			fprintf(stderr, "Error having plus as a sign!\n");
@@ -288,7 +289,7 @@ sign: ADDOP
 	{ 
 		$$.ival = 0; /* no sign */
 	} 
- 	| SUBOP | /* vide */ ; 
+;
 
 constant: 
 		ICONST   { $$ = new_ast_const_node(INT_TYPE, $1);  }

@@ -134,6 +134,9 @@ typedef struct AST_Node_Arithm
 {
 	enum Node_Type type; // node type
 
+	// data type of result
+	int data_type;
+
 	// operator
 	enum Arithm_op op;
 
