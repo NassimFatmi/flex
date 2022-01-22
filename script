@@ -1,4 +1,6 @@
 bison -d parser.y  
 flex lex.l  
-gcc -o output parser.tab.c lex.yy.c  
+gcc -o output parser.tab.c lex.yy.c
+rm lex.yy.c parser.tab.c
 ./output test.am
+

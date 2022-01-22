@@ -51,38 +51,6 @@ AST_Node *new_ast_const_node(int const_type, Value val)
 
 /* Statements */
 
-AST_Node *new_ast_if_node(AST_Node *condition, AST_Node *if_branch, AST_Node **elsif_branches,
-													int elseif_count, AST_Node *else_branch)
-{
-	// allocate memory
-	AST_Node_If *v = malloc(sizeof(AST_Node_If));
-
-	// set entries
-	v->type = IF_NODE;
-	v->condition = condition;
-	v->if_branch = if_branch;
-	v->elsif_branches = elsif_branches;
-	v->elseif_count = elseif_count;
-	v->else_branch = else_branch;
-
-	// return type-casted result
-	return (struct AST_Node *)v;
-}
-
-AST_Node *new_ast_while_node(AST_Node *condition, AST_Node *while_branch)
-{
-	// allocate memory
-	AST_Node_While *v = malloc(sizeof(AST_Node_While));
-
-	// set entries
-	v->type = WHILE_NODE;
-	v->condition = condition;
-	v->while_branch = while_branch;
-
-	// return type-casted result
-	return (struct AST_Node *)v;
-}
-
 AST_Node *new_ast_assign_node(list_t *entry, int ref, AST_Node *assign_val)
 {
 	// allocate memory
