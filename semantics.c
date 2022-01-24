@@ -220,10 +220,10 @@ int get_result_type(int type_1, int type_2, int op_type)
 
 void type_error(int type_1, int type_2, int op_type)
 {
-	fprintf(stderr, "Semantic error between ");
+	fprintf(stderr, "\n Erreur semantique entre ");
 	/* first type */
 	if (type_1 == INT_TYPE)
-		fprintf(stderr, "%s", "int");
+		fprintf(stderr, "%s", "integer");
 	else if (type_1 == FLOAT_TYPE)
 		fprintf(stderr, "%s", "float");
 	else if (type_1 == CHAR_TYPE)
@@ -231,11 +231,11 @@ void type_error(int type_1, int type_2, int op_type)
 	else
 		fprintf(stderr, "%s", "other");
 
-	fprintf(stderr, " and ");
+	fprintf(stderr, " et ");
 
 	/* second type */
 	if (type_2 == INT_TYPE)
-		fprintf(stderr, "%s", "int");
+		fprintf(stderr, "%s", "integer");
 	else if (type_2 == FLOAT_TYPE)
 		fprintf(stderr, "%s", "float");
 	else if (type_2 == CHAR_TYPE)
@@ -244,7 +244,7 @@ void type_error(int type_1, int type_2, int op_type)
 		fprintf(stderr, "%s", "other");
 
 	/* operator */
-	fprintf(stderr, " using op type ");
+	fprintf(stderr, " en utilisant op type ");
 	switch (op_type)
 	{
 	case NONE:
@@ -252,9 +252,6 @@ void type_error(int type_1, int type_2, int op_type)
 		break;
 	case ARITHM_OP:
 		fprintf(stderr, "%s", "ARITHM_OP");
-		break;
-	case BOOL_OP:
-		fprintf(stderr, "%s", "BOOL_OP");
 		break;
 	case NOT_OP:
 		fprintf(stderr, "%s", "NOT_OP");
@@ -271,7 +268,7 @@ void type_error(int type_1, int type_2, int op_type)
 	}
 
 	/* line */
-	fprintf(stderr, " in line %d\n", lineno);
+	fprintf(stderr, " a la ligne %d\n", lineno);
 
 	exit(1);
 }

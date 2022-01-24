@@ -13,7 +13,6 @@
     // #endif
 
     int lineno = 1; // initialize to 1
-    int err_lex = 0;
     // void ret_print(char *token_type);
     void yyerror();
 	extern FILE *yyin;
@@ -38,9 +37,9 @@ TYPE        "char"|"integer"|"string"|"float"
 ID          {alpha}+{alnum}*
 %%
  
-"!!".*                  { printf(" \n commentaire a la ligne %d\n", lineno); } 
+"!!".*                  { printf(" \n Commentaire a la ligne %d\n", lineno); } 
  
-"!*"                    { printf(" \n commentaire de la ligne %d ", lineno); BEGIN(ML_COMMENT); }
+"!*"                    { printf(" \n Commentaire de la ligne %d ", lineno); BEGIN(ML_COMMENT); }
 <ML_COMMENT>"*!"        { printf(" a la ligne %d\n", lineno); BEGIN(INITIAL); }
 <ML_COMMENT>[^*\n]+     
 <ML_COMMENT>"*"         
@@ -95,7 +94,6 @@ ID          {alpha}+{alnum}*
 "."             { return(DOT);}
 ","             { return(COMMA);}
 
-
 {ID}            {
                     // insert identifier into symbol table
                     insert(yytext, strlen(yytext), UNDEF, lineno);
@@ -114,6 +112,9 @@ ID          {alpha}+{alnum}*
  
 "\n"            { lineno += 1; }
 [ \t\r\f]+          
-.               { printf("Lexeme inconnu a la ligne %d\n", lineno); err_lex=1; return 1;}
+.               { 
+                    printf("\n Lexeme inconnu a la ligne %d\n", lineno); exit(1);
+                    yyerror("\n Lexeme inconnu");
+                }
  
 %%

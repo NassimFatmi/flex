@@ -9,7 +9,6 @@
 	extern FILE *yyin;
 	extern FILE *yyout;
 	extern int lineno;
-	extern int err_lex;
 	extern int yylex();
 	void yyerror();
 
@@ -69,7 +68,7 @@
 
 program: structure { printf("\n FIN DE PROGRAMME AVEC SUCCESS \n");};
 
-structure: declarations fonctions MAIN LPAREN RPAREN LBRACE instructions RBRACE;
+structure: declarations fonctions MAIN LPAREN RPAREN LBRACE {printf("\n Debut du programme principale a la ligne %d\n", lineno-1);} instructions RBRACE;
 
 
 /* DECLARATION */
@@ -92,7 +91,7 @@ declaration: type { declare = 1; } names { declare = 0; } SEMI
         }
         ast_traversal($$); /* pour tester les noeuds */
     }
-	;
+	| STRUCT ID LBRACK declarations RBRACK SEMI	{printf(" \n Fin de declaration d'un enregistrement a la ligne %d\n", lineno);};
 
 type: INT 		{  $$ = INT_TYPE;}
 	| CHAR 		  { $$ = CHAR_TYPE;}
@@ -118,7 +117,7 @@ array: array LBRACK ICONST RBRACK | LBRACK ICONST RBRACK ;
 /* FONCTIONS */
 fonctions: fonctions fonction | fonction | /* vide */;
 
-fonction: fonction_head fonction_tail  {printf("\n fin d'implementation d'une fonction a la ligne %d\n", lineno);};
+fonction: fonction_head fonction_tail  {printf("\n Fin d'implementation d'une fonction a la ligne %d\n", lineno);};
 
 // Pour incrementer le scope lors la déclaration d'une fonction
 fonction: { incr_scope(); } fonction_head fonction_tail { hide_scope(); } ;
@@ -127,13 +126,11 @@ fonction_head: return_type ID LPAREN parameters RPAREN;
 
 fonction_tail: LBRACE declarations instructions RBRACE;
 
-return_type: type 	{printf("  : type de retour d'une fonction qui termine a la ligne %d\n", lineno);};
-	| VOID			{printf("  \n void : type de retour d'une fonction qui termine a la ligne %d\n", lineno);};
-;
+return_type: type | VOID;
 
 parameters: parameters SEMI parameter | parameter | /* vide */;
 
-parameter : type input {printf("  parametre d'une fonction a la ligne %d\n", lineno);};;
+parameter : type input ;;
 
 input : input COMMA variable | variable ;
 
@@ -144,7 +141,7 @@ instructions: instructions instruction | instruction | /* vide */;
 instruction:
 	if_instruction		{printf("\n fin de if instruction a la ligne %d\n", lineno);}
 	| while_instruction	{printf("\n fin de while instruction a la ligne %d\n", lineno);}
-	| assigment 		{printf("\n assigment instruction a la ligne %d\n", lineno);}
+	| assigment 		
 	| BREAK	SEMI		{printf("\n break instruction a la ligne %d\n", lineno);}
 	| RETURN type_return SEMI	 	{printf("\n return instruction a la ligne %d\n", lineno);}
 	| fonction_call SEMI
@@ -384,7 +381,7 @@ int main (int argc, char *argv[]){
 	// else{printf("Success de l'analyse lexicale");}
 
 	fclose(yyin);
-	printf("Parsing finished!");
+	// printf("Parsing finished!");
 	
 	// symbol table dump
 	yyout = fopen("table_symboles.out", "w");

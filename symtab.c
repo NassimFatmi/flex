@@ -55,7 +55,7 @@ void insert(char *name, int len, int type, int lineno)
 			/* add to hashtable */
 			l->next = hash_table[hashval];
 			hash_table[hashval] = l;
-			printf("Inserted %s for the first time with linenumber %d!\n", name, lineno);
+			printf("\n Insere %s pour la premiere fois qui se trouve a la ligne %d!\n", name, lineno);
 		}
 	}
 	/* found in table */
@@ -73,7 +73,7 @@ void insert(char *name, int len, int type, int lineno)
 			t->next = (RefList *)malloc(sizeof(RefList));
 			t->next->lineno = lineno;
 			t->next->next = NULL;
-			printf("Found %s again at line %d!\n", name, lineno);
+			printf("\n Trouve %s une autre fois a la linge %d!\n", name, lineno);
 		}
 		/* new entry */
 		else
@@ -81,7 +81,7 @@ void insert(char *name, int len, int type, int lineno)
 			/* same scope - multiple declaration error! */
 			if (l->scope == cur_scope)
 			{
-				fprintf(stderr, "A multiple declaration of variable %s at line %d\n", name, lineno);
+				fprintf(stderr, "\n Declaration multiple de la variable %s a la ligne %d\n", name, lineno);
 				exit(1);
 			}
 			/* other scope - create new entry */
@@ -99,7 +99,7 @@ void insert(char *name, int len, int type, int lineno)
 				/* add to hashtable */
 				l->next = hash_table[hashval];
 				hash_table[hashval] = l;
-				printf("Inserted %s for a new scope with linenumber %d!\n", name, lineno);
+				printf("\n Inserted %s for a new scope with linenumber %d!\n", name, lineno);
 			}
 		}
 	}
@@ -132,9 +132,11 @@ void afficher_table(FILE *of)
 				if (l->st_type == INT_TYPE)
 					fprintf(of, "%-15s", "int");
 				else if (l->st_type == FLOAT_TYPE)
-					fprintf(of, "%-15s", "real");
+					fprintf(of, "%-15s", "float");
 				else if (l->st_type == CHAR_TYPE)
 					fprintf(of, "%-15s", "char");
+				else if (l->st_type == STR_TYPE)
+					fprintf(of, "%-15s", "string");
 				else
 					fprintf(of, "%-15s", "undef"); // if UNDEF or 0
 				fprintf(of, "  %d  ", l->scope);

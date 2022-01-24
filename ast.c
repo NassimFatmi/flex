@@ -258,12 +258,12 @@ void ast_print_node(AST_Node *node)
 		break;
 	case DECL_NODE:
 		temp_decl = (struct AST_Node_Decl *)node;
-		printf("Declaration Node of data-type %d for %d names\n",
+		printf("\n Declaration d'un noeud de type %d avec %d variables\n",
 					 temp_decl->data_type, temp_decl->names_count);
 		break;
 	case CONST_NODE:
 		temp_const = (struct AST_Node_Const *)node;
-		printf("Constant Node of const-type %d with value ", temp_const->const_type);
+		printf("\n Un noeud constant  avec la valeur ");
 		switch (temp_const->const_type)
 		{
 		case INT_TYPE:
@@ -282,27 +282,27 @@ void ast_print_node(AST_Node *node)
 		break;
 	case ASSIGN_NODE:
 		temp_assign = (struct AST_Node_Assign *)node;
-		printf("Assign Node of entry %s\n", temp_assign->entry->st_name);
+		printf("\n Assigner un noeud d'une entree %s\n", temp_assign->entry->st_name);
 		break;
 	case ARITHM_NODE:
 		temp_arithm = (struct AST_Node_Arithm *)node;
-		printf("Arithmetic Node of operator %d with result type %d\n", temp_arithm->op, temp_arithm->data_type);
+		printf("\n Arithmetic Node of operator %d with result type %d\n", temp_arithm->op, temp_arithm->data_type);
 		break;
 	case BOOL_NODE:
 		temp_bool = (struct AST_Node_Bool *)node;
-		printf("Boolean Node of operator %d\n", temp_bool->op);
+		printf("\n Boolean Node of operator %d\n", temp_bool->op);
 		break;
 	case REL_NODE:
 		temp_rel = (struct AST_Node_Rel *)node;
-		printf("Relational Node of operator %d\n", temp_rel->op);
+		printf("\n Relational Node of operator %d\n", temp_rel->op);
 		break;
 	case EQU_NODE:
 		temp_equ = (struct AST_Node_Equ *)node;
-		printf("Equality Node of operator %d\n", temp_equ->op);
+		printf("\n Equality Node of operator %d\n", temp_equ->op);
 		break;
 	case REF_NODE:
 		temp_ref = (struct AST_Node_Ref *)node;
-		printf("Reference Node of entry %s\n", temp_ref->entry->st_name);
+		printf("\n Reference Node of entry %s\n", temp_ref->entry->st_name);
 		break;
 	default: /* wrong choice case */
 		fprintf(stderr, "Error in node selection!\n");
@@ -332,7 +332,7 @@ void ast_traversal(AST_Node *node)
 	{
 		AST_Node_Assign *temp_assign = (struct AST_Node_Assign *)node;
 		ast_print_node(node);
-		printf("Assigning:\n");
+		printf("\n Assigning:\n");
 		ast_traversal(temp_assign->assign_val);
 	}
 	/* others */
